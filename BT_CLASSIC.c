@@ -57,7 +57,6 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         break;
     case ESP_SPP_CLOSE_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CLOSE_EVT");
-        spp_wr_task_shut_down();
         vTaskDelete(SenderToBtHandle);
         waitCongestionTx = false;
         btConnected = false;
@@ -92,7 +91,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 
     case ESP_SPP_SRV_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_SRV_OPEN_EVT");
-        spp_wr_task_start_up();
+        comms_start_up();
         xTaskCreatePinnedToCore(handlerEnqueueSender,"queue sender manager",4096,NULL,5,&SenderToBtHandle,BT_CORE);
         waitCongestionTx = false;
         btConnected = true;
